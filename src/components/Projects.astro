@@ -1,57 +1,102 @@
 ---
-import NextJS from "./icons/NextJS.astro"
-import Tailwind from "./icons/Tailwind.astro"
+import GIT from "./icons/GIT.astro";
+import Node from "./icons/Node.astro";
+import Sequelize from "./icons/Sequelize.astro";
+import Express from "./icons/Express.astro";
+import Render from "./icons/Render.astro";
+import Postgre from "./icons/Postgre.astro"
+import React from "./icons/React.astro"
 
 const TAGS = {
-  NEXT: {
-    name: "Next.js",
-    class: "bg-black text-white",
-    icon: NextJS,
-  },
-  TAILWIND: {
-    name: "Tailwind CSS",
+  GIT: {
+    name: "GIT",
     class: "bg-[#003159] text-white",
-    icon: Tailwind,
+    icon: GIT,
   },
-}
+  SEQUELIZE: {
+    name: "Sequelize",
+    class: "bg-[#003159] text-white",
+    icon: Sequelize,
+  },
+  NODE: {
+    name: "Node.Js",
+    class: "bg-[#003159] text-white",
+    icon: Node,
+  },
+  EXPRESS: {
+    name: "Express.Js",
+    class: "bg-[#003159] text-white",
+    icon: Express,
+  },
+  RENDER: {
+    name: "Render",
+    class: "bg-[#003159] text-white",
+    icon: Render,
+  },
+  POSTGRE: {
+    name: "PostgreSQL",
+    class: "bg-[#003159] text-white",
+    icon: Postgre,
+  },
+  REACT: {
+    name: "React.Js",
+    class: "bg-[#003159] text-white",
+    icon: React,
+  },
+};
 const PROJECTS = [
   {
-    title: "SVGL - A beautiful library with SVG logos",
+    title: "EPICUREOS - WebApp de reserva de mesas para restaurantes",
     description:
-      "Created from scratch with Next.js and Tailwind CSS. It's a library with SVG logos from the most popular brands. Optimized for SEO and performance.",
+      "MVP creado desde 0. Utilizando Express, PostgreSQL, Sequelize , JWT, Bcrypt y otras librerías.",
+    link: "https://svgl.vercel.app/",
+    github: "https://github.com/No-Country/c15-08-t-node-react",
+    image: "/projects/epicureos.jpg",
+    tags: [TAGS.NODE, TAGS.EXPRESS, TAGS.GIT, TAGS.RENDER, TAGS.SEQUELIZE, TAGS.POSTGRE, TAGS.REACT],
+  },
+  {
+    title: "EPICUREOS - WebApp de reserva de mesas para restaurantes",
+    description:
+      "MVP creado desde 0. Utilizando Express, PostgreSQL, Sequelize , JWT, Bcrypt y otras librerías.",
     link: "https://svgl.vercel.app/",
     github: "https://github.com/pheralb/svgl",
     image: "/projects/svgl.webp",
-    tags: [TAGS.NEXT, TAGS.TAILWIND],
+    tags: [TAGS.GIT, TAGS.SEQUELIZE, TAGS.NODE, TAGS.EXPRESS, TAGS.RENDER],
   },
-]
+];
 ---
 
 {
-  PROJECTS.map(({ image, title, description, tags }) => (
-    <article>
-      <h3 class="text-2xl font-semibold text-yellow-800 dark:text-yellow-200 mb-2">
-        {title}
-      </h3>
-      <p class="text-lg mb-4 text-pretty">{description}</p>
-      <ul class="flex gap-x-2 flex-row mb-2">
-        {tags.map((tag) => (
-          <li>
-            <span
-              class={`flex gap-x-2 rounded-full text-xs ${tag.class} py-1 px-2 border border-white/10`}
-            >
-              <tag.icon class="size-4" />
-              {tag.name}
-            </span>
-          </li>
-        ))}
-      </ul>
-      <img
-        loading="lazy"
-        class="rounded shadow-2xl shadow-white/10 aspect-video"
-        src={image}
-        alt={`Captura de pantalla del proyecto ${image}`}
-      />
-    </article>
+  PROJECTS.map(({ image, title, description, tags, github }) => (
+    <>
+      <br />
+      <article>
+        <h3 class="text-2xl font-semibold text-yellow-800 dark:text-yellow-200 mb-2">
+          {title}
+        </h3>
+        <p class="text-lg mb-4 text-pretty">{description}</p>
+        <ul class="flex gap-x-2 flex-row mb-2">
+          {tags.map((tag) => (
+            <li>
+              <span
+                class={`flex gap-x-2 rounded-full text-xs ${tag.class} py-1 px-2 border border-white/10`}
+              >
+                <tag.icon class="size-4" />
+                {tag.name}
+              </span>
+            </li>
+          ))}
+        </ul>
+        <a href={github} target="_blank" rel="noopener">          
+        <img
+          loading="lazy"
+          class="rounded shadow-2xl shadow-white/10 aspect-video"
+          src={image}
+          alt={`Captura de pantalla del proyecto ${image}`}
+        /></a>
+      </article>
+      <br />
+      <hr />
+    </>
   ))
 }
