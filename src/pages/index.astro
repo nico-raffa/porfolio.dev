@@ -1,88 +1,56 @@
 ---
-import Layout from "../layouts/Layout.astro";
-import Badge from "../components/Badge.astro";
-import SectionContainer from "../components/SectionContainer.astro";
-import LinkedInIcon from "../components/icons/LinkedIn.astro";
-import SocialPill from "../components/SocialPill.astro";
-import GitHubIcon from "../components/icons/GitHub.astro";
-import MailIcon from "../components/icons/Mail.astro";
-import Experience from "../components/Experience.astro";
-import Briefcase from "../components/icons/Briefcase.astro";
-import CodeIcon from "../components/icons/Code.astro";
-import Projects from "../components/Projects.astro";
+import Layout from "../layouts/Layout.astro"
+
+import AboutMe from "../components/AboutMe.astro"
+import Briefcase from "../components/icons/Briefcase.astro"
+import CodeIcon from "../components/icons/Code.astro"
+import Experience from "../components/Experience.astro"
+import ProfileCheck from "../components/icons/ProfileCheck.astro"
+import Projects from "../components/Projects.astro"
+import SectionContainer from "../components/SectionContainer.astro"
+import Hero from "../components/Hero.astro"
 ---
 
 <Layout
-  title="Porfolio de Nicolas Raffagnini - Programador Web & Software"
-  description="Contrata a Nicolas para crear tu aplicación web o móvil. Desarrollador Web y de Software. Especializado en soluciones únicas."
+  title="Porfolio de Nicolas - Desarrollador de Software y Web"
+  description="Desarrollador de software y web. Especializado en soluciones eficientes."
 >
   <main class="px-4">
-    <SectionContainer class="py-44 pb-32">
-      <img
-        class="rounded-full size-20 mb-4"
-        src="/nicodev.jpg"
-        alt="nico raffa"
-      />
-      <h1
-        class="text-gray-900 dark:text-white text-3xl md:text-4xl lg:text-5xl font-bold flex flex-row gap-x-4 pb-6 lg:pb-10"
-      >
-        Hola, soy Nicolás! <a
-          href="https://linkedin.com/in/nicolas-raffagnini"
-          target="_blank"
-          rel="noopener"
-          class="flex justify-center items-center"
-        >
-          <Badge>Disponible para trabajar</Badge>
-        </a>
-      </h1>
-      <h2
-        class="text-xl lg:text-2xl text-balance max-w-[700px] text-black dark:text-white"
-      >
-        <span></span><span class="text-yellow-800 dark:text-yellow-200">
-          Desarrollador de Software y Web</span
-        >.
-        <span class="text-red-800 dark:text-red-200">
-          De Rosario, Argentina</span
-        >.
-        <span class="text-sky-800 dark:text-sky-200"
-          >Especializado en soluciones únicas y eficientes.</span
-        >
-      </h2>
-
-      <nav class="flex gap-4 mt-8 flex-wrap">
-        <SocialPill href="https://linkedin.com/in/nicolas-raffagnini">
-          <LinkedInIcon class="size-4 md:size-6" />
-          LinkedIn
-        </SocialPill>
-        <SocialPill href="https://github.com/nico-raffa">
-          <GitHubIcon class="size-4 md:size-6" />
-          GitHub
-        </SocialPill>
-        <SocialPill href="mailto:nicolas.raffagnini95@gmail.com">
-          <MailIcon class="size-4 md:size-6" />
-          nicolas.raffagnini@gmail.com
-        </SocialPill>
-      </nav>
+    <SectionContainer class="py-16 md:py-36">
+      <Hero>
+      </slot>
+    </Hero>
     </SectionContainer>
-
+    <div class="space-y-24">
     <SectionContainer id="experiencia">
       <h2
-        class="text-3xl font-semibold mb-6 flex gap-x-3 items-center text-black/80 dark:text-white/80"
+        class="flex items-center mb-6 text-3xl font-semibold gap-x-3 text-black/80 dark:text-white"
       >
-        <Briefcase class="size-7" />
-        Experiencia
+        <Briefcase class="size-8" />
+        Experiencia laboral
       </h2>
       <Experience />
     </SectionContainer>
 
     <SectionContainer id="proyectos">
       <h2
-        class="text-3xl font-semibold mb-6 flex gap-x-3 items-center text-black/80 dark:text-white/80"
+        class="flex items-center mb-6 text-3xl font-semibold gap-x-3 text-black/80 dark:text-white"
       >
         <CodeIcon class="size-7" />
         Proyectos
       </h2>
       <Projects />
     </SectionContainer>
+
+    <SectionContainer id="sobre-mi">
+      <h2
+        class="flex items-center mb-6 text-3xl font-semibold gap-x-8 text-black/80 dark:text-white"
+      >
+        <ProfileCheck class="size-8" />
+        Sobre mí
+      </h2>
+      <AboutMe />
+    </SectionContainer>
+  </div>
   </main>
 </Layout>

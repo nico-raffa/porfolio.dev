@@ -4,10 +4,24 @@ import Node from "./icons/Node.astro";
 import Sequelize from "./icons/Sequelize.astro";
 import Express from "./icons/Express.astro";
 import Render from "./icons/Render.astro";
-import Postgre from "./icons/Postgre.astro"
-import React from "./icons/React.astro"
-
+import Postgre from "./icons/Postgre.astro";
+import React from "./icons/React.astro";
+import LinkButton from "./LinkButton.astro";
+import Link from "./icons/Link.astro";
+import GitHub from "./icons/GitHub.astro";
+import Swagger from "./icons/Swagger.astro";
+import MongoDB from "./icons/MongoDB.astro";
 const TAGS = {
+  MONGODB: {
+    name: "MongoDB",
+    class: "bg-[#003159] text-white",
+    icon: MongoDB,
+  },
+  SWAGGER: {
+    name: "Swagger",
+    class: "bg-[#003159] text-white",
+    icon: Swagger,
+  },
   GIT: {
     name: "GIT",
     class: "bg-[#003159] text-white",
@@ -46,57 +60,87 @@ const TAGS = {
 };
 const PROJECTS = [
   {
-    title: "EPICUREOS - WebApp de reserva de mesas para restaurantes",
+    title: "EPICUREOS - Reserva de mesas para restaurantes",
     description:
-      "MVP creado desde 0. Utilizando Express, PostgreSQL, Sequelize , JWT, Bcrypt y otras librerías.",
-    link: "https://svgl.vercel.app/",
+      "MVP creado desde 0 junto a un equipo mutidisciplinario, bajo la metodología SCRUM",
+    link: "https://c15-08-t-node-reacts.onrender.com/",
     github: "https://github.com/No-Country/c15-08-t-node-react",
     image: "/projects/epicureos.jpg",
-    tags: [TAGS.NODE, TAGS.EXPRESS, TAGS.GIT, TAGS.RENDER, TAGS.SEQUELIZE, TAGS.POSTGRE, TAGS.REACT],
+    tags: [
+      TAGS.NODE,
+      TAGS.EXPRESS,
+      TAGS.GIT,
+      TAGS.RENDER,
+      TAGS.SEQUELIZE,
+      TAGS.POSTGRE,
+      TAGS.REACT,
+    ],
   },
   {
-    title: "EPICUREOS - WebApp de reserva de mesas para restaurantes",
+    title: "TuneMatch - Conecta con personas con tus gustos musicales",
     description:
-      "MVP creado desde 0. Utilizando Express, PostgreSQL, Sequelize , JWT, Bcrypt y otras librerías.",
-    link: "https://svgl.vercel.app/",
-    github: "https://github.com/pheralb/svgl",
-    image: "/projects/svgl.webp",
-    tags: [TAGS.GIT, TAGS.SEQUELIZE, TAGS.NODE, TAGS.EXPRESS, TAGS.RENDER],
+      "MVP Creado desde 0. Creando un algoritmo de Scoring & Matching. Junto a un equipo multidisciplinario bajo la metodología SCRUM",
+    link: "https://s13-05-t-node-react-1b9t.onrender.com/",
+    github: "https://github.com/No-Country/s13-05-t-node-react",
+    image: "/projects/tunematch.jpg",
+    tags: [TAGS.GIT, TAGS.NODE, TAGS.EXPRESS, TAGS.RENDER, TAGS.SWAGGER, TAGS.MONGODB],
   },
 ];
 ---
 
-{
-  PROJECTS.map(({ image, title, description, tags, github }) => (
-    <>
-      <br />
-      <article>
-        <h3 class="text-2xl font-semibold text-yellow-800 dark:text-yellow-200 mb-2">
-          {title}
-        </h3>
-        <p class="text-lg mb-4 text-pretty">{description}</p>
-        <ul class="flex gap-x-2 flex-row mb-2">
-          {tags.map((tag) => (
-            <li>
-              <span
-                class={`flex gap-x-2 rounded-full text-xs ${tag.class} py-1 px-2 border border-white/10`}
-              >
-                <tag.icon class="size-4" />
-                {tag.name}
-              </span>
-            </li>
-          ))}
-        </ul>
-        <a href={github} target="_blank" rel="noopener">          
-        <img
-          loading="lazy"
-          class="rounded shadow-2xl shadow-white/10 aspect-video"
-          src={image}
-          alt={`Captura de pantalla del proyecto ${image}`}
-        /></a>
+<div class="flex flex-col gap-y-16">
+  {
+    PROJECTS.map(({ image, title, description, tags, link, github }) => (
+      <article class="flex flex-col space-x-0 space-y-8 group md:flex-row md:space-x-8 md:space-y-0">
+        <div class="w-full md:w-1/2">
+          <div class="relative flex flex-col items-center col-span-6 row-span-5 gap-8 transition duration-500 ease-in-out transform shadow-xl overflow-clip rounded-xl sm:rounded-xl md:group-hover:-translate-y-1 md:group-hover:shadow-2xl lg:border lg:border-gray-800 lg:hover:border-gray-700 lg:hover:bg-gray-800/50">
+            <img
+              alt={title}
+              class="object-cover object-top w-full h-56 transition duration-500 sm:h-full md:scale-110 md:group-hover:scale-105"
+              loading="lazy"
+              src={image}
+            />
+          </div>
+        </div>
+
+        <div class="w-full md:w-1/2 md:max-w-lg">
+          <h3 class="text-2xl font-bold text-gray-800 dark:text-gray-100">
+            {title}
+          </h3>
+          <div class="flex flex-wrap grid-cols-3 mt-2">
+            <ul class="flex flex-wrap mb-2 gap-x-2">
+              {tags.map((tag) => (
+                <li>
+                  <span
+                    class={`flex gap-x-2 rounded-full text-xs ${tag.class} my-1 py-1 px-2 `}
+                  >
+                    <tag.icon class="size-4" />
+                    {tag.name}
+                  </span>
+                </li>
+              ))}
+            </ul>
+
+            <div class="mt-2 text-gray-700 dark:text-gray-400">
+              {description}
+            </div>
+            <footer class="flex items-end justify-start mt-4 gap-x-4">
+              {github && (
+                <LinkButton href={github}>
+                  <GitHub class="size-6" />
+                  Code
+                </LinkButton>
+              )}
+              {link && (
+                <LinkButton href={link}>
+                  <Link class="size-4" />
+                  Preview
+                </LinkButton>
+              )}
+            </footer>
+          </div>
+        </div>
       </article>
-      <br />
-      <hr />
-    </>
-  ))
-}
+    ))
+  }
+</div>
