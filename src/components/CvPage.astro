@@ -1,0 +1,223 @@
+---
+import '../styles/print.css';
+import { Printer } from 'lucide-astro';
+import Identity from './Identity.astro';
+import TopBar from './TopBar.astro';
+import Section from './Section.astro';
+import Row from './Row.astro';
+import StackList from './StackList.astro';
+import TechDetails from './TechDetails.astro';
+import { decisionCases } from '../data/cases';
+import { profile, jobs, education, pdf, type Lang } from '../data/cv';
+import { useTranslations, homeHref } from '../i18n';
+import { inlineCode } from '../i18n/markup';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<TopBar lang={lang} page="cv" />
+
+<main id="contenido">
+  <Identity lang={lang} />
+  
+  <!-- Stack ------------------------------------------------------------- -->
+  <Section title={t.stack.title} note={t.stack.note} id="stack">
+    <Row>
+      <div class="space-y-4">
+        {
+          t.stack.groups.map((group) => (
+            <div class="grid gap-1.5 sm:grid-cols-[8.5rem_minmax(0,1fr)] sm:items-start sm:gap-3">
+              <h3 class="label sm:pt-1.5">{group.label}</h3>
+              <StackList items={group.items} />
+            </div>
+          ))
+        }
+        <div class="border-t border-rule pt-4">
+          <h3 class="label">{t.stack.declaredLabel}</h3>
+          <div class="mt-2">
+            <StackList items={t.stack.declared} muted />
+          </div>
+        </div>
+      </div>
+    </Row>
+  </Section>
+
+  <!-- Experiencia -------------------------------------------------------- -->
+  <Section title={t.experience.title} id="experiencia">
+    {
+      jobs.map((job) => {
+        const j = t.experience.jobs[job.id];
+        return (
+          <Row as="article" class="border-t border-rule py-8 first:border-t-0 first:pt-0">
+            <div slot="rail" class="label">
+              <div>
+                {job.from} — {job.to ?? t.experience.present}
+              </div>
+              <div class="mt-1">{job.short}</div>
+            </div>
+
+            <h3 class="font-display text-[1.75rem] leading-tight">
+              {job.company}
+              {job.note && <span class="text-ink-2"> · {job.note}</span>}
+            </h3>
+            <p class="mt-1 font-medium">{j.role}</p>
+            <p class="mt-3 leading-relaxed text-ink-2">{j.summary}</p>
+
+            {
+              'projects' in j ? (
+                <div class="mt-7 space-y-7">
+                  {j.projects.map((project) => (
+                    <div>
+                      <h4 class="font-display text-xl leading-snug">{project.name}</h4>
+                      <p class="label mt-1.5 text-accent">{project.highlight}</p>
+                      <p class="mt-2.5 leading-relaxed text-ink-2">{project.summary}</p>
+                      <div class="mt-3.5">
+                        <StackList items={project.stack} />
+                      </div>
+                      <TechDetails label={t.experience.details} items={project.details} />
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <>
+                  <div class="mt-4">
+                    <StackList items={j.stack} />
+                  </div>
+                  <TechDetails label={t.experience.details} items={j.details} />
+                </>
+              )
+            }
+          </Row>
+        );
+      })
+    }
+  </Section>
+
+  <!-- Decisiones técnicas ------------------------------------------------ -->
+  <!-- Misma prosa que los casos del portafolio: la fuente es src/i18n/*.ts,
+       bajo `cases.items`. Acá van sólo las decisiones; los dos sistemas ya
+       están contados arriba, en la experiencia, y repetirlos gastaría hoja. -->
+  <Section title={t.cases.decisionsTitle} note={t.cases.decisionsNote} id="decisiones">
+    {
+      decisionCases.map((entry) => {
+        const c = t.cases.items[entry.id];
+        return (
+          <Row as="article" class="border-t border-rule py-8 print-block first:border-t-0 first:pt-0">
+            <p slot="rail" class="label">
+              {c.tag}
+            </p>
+            <h3 class="font-display text-xl leading-snug">{c.title}</h3>
+            <dl class="mt-4 space-y-3.5 leading-relaxed">
+              <div>
+                <dt class="label">{t.cases.situation}</dt>
+                <dd class="mt-1 text-ink-2" set:html={inlineCode(c.situation)} />
+              </div>
+              <div>
+                <dt class="label">{t.cases.action}</dt>
+                <dd class="mt-1 text-ink-2" set:html={inlineCode(c.action)} />
+              </div>
+              <div>
+                <dt class="label">{t.cases.result}</dt>
+                <dd class="mt-1 border-l-2 border-accent pl-3" set:html={inlineCode(c.result)} />
+              </div>
+            </dl>
+          </Row>
+        );
+      })
+    }
+  </Section>
+
+  <!-- Formación ---------------------------------------------------------- -->
+  <Section title={t.education.title} id="formacion">
+    {
+      education.map((item) => (
+        <Row class="py-3">
+          <p slot="rail" class="label">
+            {item.period}
+          </p>
+          <p class="font-medium">{t.education.items[item.id]}</p>
+          <p class="text-[0.9375rem] text-ink-2">{item.institution}</p>
+        </Row>
+      ))
+    }
+
+    <Row class="mt-6 border-t border-rule pt-6">
+      <h3 slot="rail" class="label">{t.education.languagesTitle}</h3>
+      <ul class="space-y-1 text-ink-2">
+        {t.education.languages.map((line) => <li>{line}</li>)}
+      </ul>
+    </Row>
+  </Section>
+</main>
+
+<!-- Contacto ------------------------------------------------------------- -->
+<footer class="border-t border-rule">
+  <div class="section-pad mx-auto max-w-5xl px-5 py-12 sm:px-8 sm:py-16">
+    <Row>
+      <h2 slot="rail" class="label">{t.contact.title}</h2>
+      <p class="font-display text-2xl leading-snug">{t.contact.lead}</p>
+
+      <ul class="mt-5 flex flex-col gap-1.5 text-ink-2 sm:flex-row sm:flex-wrap sm:gap-x-6">
+        <li><a href={`mailto:${profile.email}`} class="link">{profile.email}</a></li>
+        <li><a href={profile.phoneHref} class="link">{profile.phone}</a></li>
+        <li><a href={profile.linkedin} class="link" rel="noopener">{profile.linkedinLabel}</a></li>
+        <li><a href={profile.github} class="link" rel="noopener">{profile.githubLabel}</a></li>
+      </ul>
+
+      <div class="no-print mt-7 flex flex-wrap gap-3">
+        <a
+          href={pdf[lang]}
+          download
+          class="label inline-flex h-11 items-center rounded-sm bg-accent px-4 text-accent-ink"
+          style="color: var(--accent-ink)"
+        >
+          {t.nav.download}
+        </a>
+        <button
+          type="button"
+          data-print
+          class="label inline-flex h-11 cursor-pointer items-center gap-2 rounded-sm border border-ink-2 px-4 text-ink transition-colors hover:bg-band"
+          title={t.nav.printTitle}
+        >
+          <Printer class="h-4 w-4" aria-hidden="true" />
+          {t.nav.print}
+        </button>
+      </div>
+
+      <p class="no-print mt-8">
+        <a href={homeHref(lang)} class="link label" title={t.nav.portfolioTitle}>{t.nav.portfolio}</a>
+      </p>
+
+      <p class="label mt-10">{t.contact.updated}</p>
+      <p class="label mt-1">{t.contact.builtWith}</p>
+    </Row>
+  </div>
+</footer>
+
+<script>
+  document.querySelectorAll('[data-print]').forEach((btn) => {
+    btn.addEventListener('click', () => window.print());
+  });
+
+  // En papel va todo: se abren los detalles técnicos antes de imprimir
+  // y se vuelven a cerrar después, para no cambiar lo que el lector dejó abierto.
+  window.addEventListener('beforeprint', () => {
+    document.querySelectorAll('details').forEach((el) => {
+      if (!el.open) {
+        el.dataset.wasClosed = '';
+        el.open = true;
+      }
+    });
+  });
+
+  window.addEventListener('afterprint', () => {
+    document.querySelectorAll('details[data-was-closed]').forEach((el) => {
+      el.open = false;
+      delete el.dataset.wasClosed;
+    });
+  });
+</script>

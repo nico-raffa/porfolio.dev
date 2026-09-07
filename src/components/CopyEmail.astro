@@ -1,0 +1,50 @@
+---
+import { Copy, Check } from 'lucide-astro';
+import { profile, type Lang } from '../data/cv';
+import { useTranslations } from '../i18n';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<span class="inline-flex items-center gap-1">
+  <a href={`mailto:${profile.email}`} class="link">{profile.email}</a>
+  <button
+    type="button"
+    data-copy-email
+    data-value={profile.email}
+    data-copied={t.identity.copied}
+    class="no-print inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-sm text-ink-2 transition-colors hover:bg-band hover:text-ink"
+    title={t.identity.copy}
+    aria-label={t.identity.copy}
+  >
+    <Copy class="icon-copy h-3.5 w-3.5" aria-hidden="true" />
+    <Check class="icon-done hidden h-3.5 w-3.5 text-accent" aria-hidden="true" />
+  </button>
+  <span data-copy-status role="status" aria-live="polite" class="label text-accent"></span>
+</span>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>('[data-copy-email]').forEach((btn) => {
+    btn.addEventListener('click', async () => {
+      const value = btn.dataset.value ?? '';
+      try {
+        await navigator.clipboard.writeText(value);
+      } catch {
+        return; // sin permiso de portapapeles: el mailto sigue estando
+      }
+      const status = btn.parentElement?.querySelector('[data-copy-status]');
+      btn.querySelector('.icon-copy')?.classList.add('hidden');
+      btn.querySelector('.icon-done')?.classList.remove('hidden');
+      if (status) status.textContent = btn.dataset.copied ?? '';
+      setTimeout(() => {
+        btn.querySelector('.icon-copy')?.classList.remove('hidden');
+        btn.querySelector('.icon-done')?.classList.add('hidden');
+        if (status) status.textContent = '';
+      }, 2000);
+    });
+  });
+</script>

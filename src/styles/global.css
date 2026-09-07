@@ -1,0 +1,228 @@
+@import "tailwindcss";
+
+/* Fuentes autohospedadas: tres roles, ningún pedido a un CDN.
+   Display: Newsreader (títulos) · Cuerpo: IBM Plex Sans · Datos: IBM Plex Mono */
+@import "@fontsource-variable/newsreader";
+@import "@fontsource-variable/ibm-plex-sans";
+@import "@fontsource/ibm-plex-mono/400.css";
+@import "@fontsource/ibm-plex-mono/500.css";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ------------------------------------------------------------------ *
+ * Tokens. El acento verde es el "greenbar": el papel continuo rayado
+ * de los listados contables. Aparece sólo en el registro de métricas,
+ * en los enlaces y en el foco. Nada más lleva color.
+ * ------------------------------------------------------------------ */
+:root {
+  --paper: #f6f5f1;
+  --surface: #ffffff;
+  --ink: #14171a;
+  --ink-2: #55605c;
+  --rule: #dfddd5;
+  --band: #e9efe7;
+  --accent: #0f5132;
+  --accent-ink: #ffffff;
+  color-scheme: light;
+}
+
+.dark {
+  --paper: #121416;
+  --surface: #191c1e;
+  --ink: #e9e7e1;
+  --ink-2: #9aa5a0;
+  --rule: #2a2f31;
+  --band: #172119;
+  --accent: #6fcf9b;
+  --accent-ink: #0b1a12;
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-surface: var(--surface);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-rule: var(--rule);
+  --color-band: var(--band);
+  --color-accent: var(--accent);
+  --color-accent-ink: var(--accent-ink);
+
+  --font-display: "Newsreader Variable", ui-serif, Georgia, serif;
+  --font-sans: "IBM Plex Sans Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", monospace;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  ::selection {
+    background-color: var(--accent);
+    color: var(--accent-ink);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    letter-spacing: -0.02em;
+  }
+
+  /* Cifras siempre alineadas en columna */
+  th,
+  td {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+/* Etiqueta en versalita mono: rótulos de sección, fuentes, metadatos del rail */
+@utility label {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+
+/* Enlace de texto: el subrayado crece al pasar */
+@utility link {
+  color: inherit;
+  text-decoration: none;
+  background-image: linear-gradient(var(--accent), var(--accent));
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  background-size: 100% 1px;
+  transition: background-size 180ms ease-out;
+
+  &:hover {
+    background-size: 100% 2px;
+  }
+}
+
+/* Identificadores de código dentro del texto */
+@utility code {
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+  padding: 0.1em 0.2em;
+  margin: 0 -0.05em;
+  border-radius: 3px;
+  background-color: var(--band);
+  white-space: nowrap;
+}
+
+/* Chip del stack */
+@utility chip {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  line-height: 1.4;
+  padding: 0.2rem 0.5rem;
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+/* Detalle técnico: <details> nativo, accesible por teclado sin código extra */
+details > summary {
+  list-style: none;
+  cursor: pointer;
+}
+details > summary::-webkit-details-marker {
+  display: none;
+}
+details > summary .marker {
+  transition: transform 200ms ease-out;
+}
+details[open] > summary .marker {
+  transform: rotate(90deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ------------------------------------------------------------------ *
+ * Llamados a la acción. El primario es el acento en relleno sólido:
+ * #0f5132 sobre blanco da ~9,5:1, y en oscuro #6fcf9b sobre #0b1a12
+ * queda por encima de AAA. La prominencia sale del relleno y de los
+ * 48px de alto, no de un color extra: la paleta sigue siendo una.
+ * ------------------------------------------------------------------ */
+@utility btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 3rem;
+  padding-inline: 1.25rem;
+  border-radius: 3px;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background-color 160ms ease-out,
+    color 160ms ease-out,
+    border-color 160ms ease-out;
+}
+
+@utility btn-primary {
+  background-color: var(--accent);
+  color: var(--accent-ink);
+  border: 1px solid var(--accent);
+
+  &:hover {
+    background-color: var(--ink);
+    border-color: var(--ink);
+    color: var(--paper);
+  }
+}
+
+@utility btn-secondary {
+  background-color: transparent;
+  color: var(--ink);
+  border: 1px solid var(--rule);
+
+  &:hover {
+    border-color: var(--ink);
+    background-color: var(--band);
+  }
+}
+
+/* Cifra de una métrica: mono, tabular y sin ligaduras que muevan las comas. */
+@utility figure-num {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+  letter-spacing: -0.02em;
+  line-height: 1;
+}

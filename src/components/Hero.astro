@@ -1,0 +1,89 @@
+---
+/**
+ * El hero. Lo primero que se lee no es el nombre: es qué problema resuelvo.
+ * El nombre y el rol quedan arriba en versalita, como el encabezado de una ficha.
+ */
+import Controls from './Controls.astro';
+import CtaRow from './CtaRow.astro';
+import { profile, type Lang } from '../data/cv';
+import { photoSrc } from '../data/photo';
+import { useTranslations } from '../i18n';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<header data-topbar-sentinel>
+  <div class="mx-auto flex max-w-5xl justify-end px-5 py-3 sm:px-8">
+    <Controls lang={lang} page="home" />
+  </div>
+
+  <div class="mx-auto max-w-5xl px-5 pb-12 sm:px-8 sm:pb-16">
+    <div class="grid gap-10 lg:grid-cols-[minmax(0,1fr)_13rem] lg:items-start lg:gap-14">
+      <div>
+        <p class="label">
+          {profile.name}
+          <span class="mx-1.5 text-rule" aria-hidden="true">·</span>
+          {t.identity.role}
+        </p>
+
+        <h1 class="mt-4 font-display text-[clamp(2rem,5.5vw,3.25rem)] leading-[1.08] font-medium">
+          {t.hero.headline}
+        </h1>
+
+        <p class="mt-5 max-w-[62ch] text-[1.0625rem] leading-relaxed text-ink-2 sm:text-lg">
+          {t.hero.sub}
+        </p>
+
+        <CtaRow lang={lang} class="mt-8" />
+
+        <p class="mt-6 inline-flex items-center gap-2 text-sm text-ink-2">
+          <span class="h-1.5 w-1.5 rounded-full bg-accent" aria-hidden="true"></span>
+          {t.identity.availability}
+        </p>
+      </div>
+
+      <div class="order-first lg:order-none">
+        {
+          photoSrc ? (
+            <img
+              src={photoSrc}
+              alt={t.identity.photoAlt}
+              width="416"
+              height="416"
+              decoding="async"
+              class="h-28 w-28 rounded-sm object-cover lg:h-52 lg:w-52"
+            />
+          ) : (
+            <div
+              class="flex h-28 w-28 items-center justify-center rounded-sm border border-rule bg-surface lg:h-52 lg:w-52"
+              aria-hidden="true"
+            >
+              <span class="font-display text-4xl tracking-tight text-ink-2 lg:text-6xl">{profile.initials}</span>
+            </div>
+          )
+        }
+        <p class="label mt-4 hidden lg:block">{profile.location}</p>
+      </div>
+    </div>
+
+    <!-- Los tres diferenciadores, numerados. Cada uno se sostiene con una cifra
+         o una responsabilidad real, nunca con un adjetivo. -->
+    <div class="mt-12 border-t border-rule pt-8 sm:mt-14">
+      <h2 class="label">{t.hero.what}</h2>
+      <ol class="mt-5 grid gap-6 sm:grid-cols-3 sm:gap-8">
+        {
+          t.hero.differentiators.map((item, i) => (
+            <li class="border-l-2 border-accent pl-4">
+              <span class="figure-num block text-[0.8125rem] text-accent">{String(i + 1).padStart(2, '0')}</span>
+              <p class="mt-2 text-[0.9375rem] leading-relaxed">{item}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </div>
+</header>

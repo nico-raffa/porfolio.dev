@@ -1,0 +1,104 @@
+---
+import '../styles/global.css';
+import { profile, type Lang } from '../data/cv';
+import { useTranslations, href, type Page } from '../i18n';
+
+interface Props {
+  lang: Lang;
+  /** Qué página es: decide el canonical y los hreflang. */
+  page?: Page;
+}
+
+const { lang, page = 'home' } = Astro.props;
+const t = useTranslations(lang);
+const canonical = new URL(href(page, lang), Astro.site).href;
+const ogImage = new URL('/og.png', Astro.site).href;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: profile.name,
+  jobTitle: t.identity.role,
+  description: t.meta.description,
+  url: new URL(href('home', lang), Astro.site).href,
+  email: `mailto:${profile.email}`,
+  telephone: profile.phone,
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: 'Rosario',
+    addressRegion: 'Santa Fe',
+    addressCountry: 'AR',
+  },
+  sameAs: [profile.linkedin, profile.github],
+  knowsLanguage: [
+    { '@type': 'Language', name: 'Spanish' },
+    { '@type': 'Language', name: 'English' },
+  ],
+  knowsAbout: [
+    'Node.js',
+    'TypeScript',
+    'Express',
+    'MySQL',
+    'Redis',
+    'MongoDB',
+    'React',
+    'Docker',
+    'Nginx',
+    'GitHub Actions',
+    'Multi-agent AI systems',
+    'RBAC',
+  ],
+  alumniOf: {
+    '@type': 'EducationalOrganization',
+    name: 'Terciario J. J. de Urquiza',
+  },
+};
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{t.meta.title}</title>
+    <meta name="description" content={t.meta.description} />
+    <meta name="author" content={profile.name} />
+    <link rel="canonical" href={canonical} />
+    <link rel="alternate" hreflang="es" href={new URL(href(page, 'es'), Astro.site).href} />
+    <link rel="alternate" hreflang="en" href={new URL(href(page, 'en'), Astro.site).href} />
+    <link rel="alternate" hreflang="x-default" href={new URL(href(page, 'es'), Astro.site).href} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+
+    <meta property="og:type" content="profile" />
+    <meta property="og:title" content={t.meta.title} />
+    <meta property="og:description" content={t.meta.description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:locale" content={lang === 'es' ? 'es_AR' : 'en_US'} />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <!-- El tema se resuelve antes del primer pintado para que no haya parpadeo. -->
+    <script is:inline>
+      (function () {
+        try {
+          const saved = localStorage.getItem('theme');
+          const dark = saved ? saved === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
+          if (dark) document.documentElement.classList.add('dark');
+        } catch (e) {
+          /* almacenamiento bloqueado: queda el tema claro */
+        }
+      })();
+    </script>
+
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} is:inline />
+  </head>
+
+  <body>
+    <a
+      href="#contenido"
+      class="no-print sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:bg-surface focus:px-4 focus:py-2 focus:text-sm focus:shadow-lg"
+      >{t.nav.skip}</a
+    >
+    <slot />
+  </body>
+</html>

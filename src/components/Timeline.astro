@@ -1,0 +1,44 @@
+---
+/**
+ * Experiencia condensada: una línea por trabajo. La profundidad técnica
+ * ya está en los casos, así que acá sólo va el recorrido, con el enlace
+ * al caso cuando hay uno.
+ */
+import Row from './Row.astro';
+import StackList from './StackList.astro';
+import { jobs, type Lang } from '../data/cv';
+import { useTranslations } from '../i18n';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<ol>
+  {
+    jobs.map((job) => {
+      const j = t.experience.jobs[job.id];
+      return (
+        <li>
+          <Row class="border-t border-rule py-7 first:border-t-0 first:pt-0" stickyRail={false}>
+            <div slot="rail" class="label">
+              {job.from} — {job.to ?? t.experience.present}
+            </div>
+
+            <h3 class="font-display text-xl leading-snug">
+              {job.company}
+              {job.note && <span class="text-ink-2"> · {job.note}</span>}
+            </h3>
+            <p class="mt-1 text-[0.9375rem] font-medium">{j.role}</p>
+            <p class="mt-2.5 leading-relaxed text-ink-2">{t.experience.oneLiners[job.id]}</p>
+            <div class="mt-4">
+              <StackList items={'projects' in j ? j.projects[1].stack : j.stack} />
+            </div>
+          </Row>
+        </li>
+      );
+    })
+  }
+</ol>

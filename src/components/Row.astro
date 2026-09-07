@@ -1,0 +1,25 @@
+---
+/**
+ * La rejilla del registro: rail de metadatos a la izquierda, contenido a la derecha.
+ * Todas las secciones usan esta misma rejilla, así las columnas coinciden de punta a punta.
+ */
+interface Props {
+  as?: 'div' | 'article';
+  class?: string;
+  /**
+   * El rail acompaña el scroll en las entradas largas. Se apaga en el encabezado:
+   * ahí `top` desplazaría la foto hacia abajo y la desalinearía del nombre.
+   */
+  stickyRail?: boolean;
+}
+const { as: Tag = 'div', class: className = '', stickyRail = true } = Astro.props;
+---
+
+<Tag class:list={['grid gap-x-8 gap-y-3 lg:grid-cols-[9rem_minmax(0,1fr)]', className]}>
+  <div class:list={[stickyRail && 'lg:sticky lg:top-24 lg:self-start']}>
+    <slot name="rail" />
+  </div>
+  <div class="measure min-w-0 max-w-[68ch]">
+    <slot />
+  </div>
+</Tag>

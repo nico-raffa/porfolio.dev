@@ -1,0 +1,77 @@
+---
+/**
+ * Pipeline e infraestructura: el carril de deploy arriba, el de backup abajo.
+ * Las dos cifras que aparecen (2:30 y GFS 7/4/12) están en la sección 4 del dossier.
+ */
+import './diagram.css';
+import type { Lang } from '../../data/cv';
+import { useTranslations } from '../../i18n';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const d = useTranslations(lang).diagrams.infra;
+const n = d.nodes;
+
+const boxes = [
+  { x: 8, y: 22, w: 78, h: 46, label: n.push },
+  { x: 118, y: 22, w: 152, h: 46, label: n.actions },
+  { x: 302, y: 22, w: 104, h: 46, label: n.ghcr },
+  { x: 452, y: 22, w: 176, h: 46, label: n.runner },
+  { x: 452, y: 112, w: 176, h: 52, label: n.nginx, sub: n.nginxNote, accent: true },
+  { x: 452, y: 206, w: 84, h: 46, label: n.prod },
+  { x: 544, y: 206, w: 84, h: 46, label: n.test },
+  { x: 240, y: 206, w: 152, h: 46, label: n.backup },
+  { x: 8, y: 206, w: 152, h: 46, label: n.drive, sub: n.gfs },
+];
+---
+
+<div class="dg-wrap">
+  <svg
+    class="dg"
+    viewBox="0 0 660 268"
+    style="min-width: 600px"
+    role="img"
+    aria-labelledby="dg-infra-t dg-infra-d"
+  >
+    <title id="dg-infra-t">{d.title}</title>
+    <desc id="dg-infra-d">{d.desc}</desc>
+
+    <defs>
+      <marker id="dg-infra-h" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+        <path class="dg-head" d="M0 0 L8 4 L0 8 z" />
+      </marker>
+      <marker id="dg-infra-ha" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+        <path class="dg-head-accent" d="M0 0 L8 4 L0 8 z" />
+      </marker>
+    </defs>
+
+    {
+      boxes.map((b) => (
+        <>
+          <rect class:list={[b.accent ? 'dg-box-accent' : 'dg-box']} x={b.x} y={b.y} width={b.w} height={b.h} rx="3" />
+          <text class="dg-label" x={b.x + b.w / 2} y={b.sub ? b.y + b.h / 2 - 8 : b.y + b.h / 2}>{b.label}</text>
+          {b.sub && <text class="dg-sub" x={b.x + b.w / 2} y={b.y + b.h / 2 + 9}>{b.sub}</text>}
+        </>
+      ))
+    }
+
+    <!-- Carril de deploy -->
+    <path class="dg-line" marker-end="url(#dg-infra-h)" d="M86 45 H114" />
+    <path class="dg-line" marker-end="url(#dg-infra-h)" d="M270 45 H298" />
+    <path class="dg-line" marker-end="url(#dg-infra-h)" d="M406 45 H448" />
+    <path class="dg-line-accent" marker-end="url(#dg-infra-ha)" d="M540 68 V108" />
+    <text class="dg-note" x="588" y="90">{n.deploy}</text>
+
+    <!-- El gateway reparte a los dos entornos aislados -->
+    <path class="dg-line" d="M540 164 V186" />
+    <path class="dg-line" d="M494 186 H586" />
+    <path class="dg-line" marker-end="url(#dg-infra-h)" d="M494 186 V202" />
+    <path class="dg-line" marker-end="url(#dg-infra-h)" d="M586 186 V202" />
+
+    <!-- Carril de backup: sale de producción y termina en Drive -->
+    <path class="dg-line" marker-end="url(#dg-infra-h)" d="M452 229 H396" />
+    <path class="dg-line" marker-end="url(#dg-infra-h)" d="M240 229 H164" />
+  </svg>
+</div>

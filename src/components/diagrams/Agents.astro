@@ -1,0 +1,81 @@
+---
+/**
+ * Flujo del sistema multiagente.
+ *
+ * CUIDADO al editar: el dossier (sección 10) marca como dato pendiente cuántos
+ * agentes hay y qué rol cumple cada uno. El único nombrado es `seller-agent`.
+ * Los otros dos van sin rótulo a propósito: acá no se inventan agentes.
+ */
+import './diagram.css';
+import type { Lang } from '../../data/cv';
+import { useTranslations } from '../../i18n';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const d = useTranslations(lang).diagrams.agents;
+const n = d.nodes;
+
+const boxes = [
+  { x: 6, y: 128, w: 104, h: 52, label: n.client },
+  { x: 158, y: 128, w: 142, h: 52, label: n.orchestrator },
+  { x: 596, y: 128, w: 158, h: 52, label: n.gemini, accent: true },
+  { x: 158, y: 24, w: 142, h: 52, label: n.redis, sub: n.redisNote },
+  { x: 158, y: 232, w: 142, h: 52, label: n.mysql, sub: n.mysqlNote },
+  { x: 596, y: 232, w: 158, h: 52, label: n.erp, sub: n.erpNote },
+];
+---
+
+<div class="dg-wrap">
+  <svg
+    class="dg"
+    viewBox="0 0 760 300"
+    style="min-width: 620px"
+    role="img"
+    aria-labelledby="dg-agents-t dg-agents-d"
+  >
+    <title id="dg-agents-t">{d.title}</title>
+    <desc id="dg-agents-d">{d.desc}</desc>
+
+    <defs>
+      <marker id="dg-agents-h" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+        <path class="dg-head" d="M0 0 L8 4 L0 8 z" />
+      </marker>
+      <marker id="dg-agents-ha" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+        <path class="dg-head-accent" d="M0 0 L8 4 L0 8 z" />
+      </marker>
+    </defs>
+
+    <!-- Bloque de agentes: caja punteada con el seller-agent nombrado y dos sin rotular -->
+    <rect class="dg-group" x="348" y="104" width="196" height="100" rx="3" />
+    <text class="dg-sub" x="446" y="118">{n.agents}</text>
+    <rect class="dg-box-accent" x="360" y="130" width="172" height="26" rx="3" />
+    <text class="dg-label" x="446" y="144">{n.seller}</text>
+    <rect class="dg-box" x="360" y="164" width="172" height="26" rx="3" />
+    <text class="dg-sub" x="446" y="177">{n.others}</text>
+
+    {
+      boxes.map((b) => (
+        <>
+          <rect class:list={[b.accent ? 'dg-box-accent' : 'dg-box']} x={b.x} y={b.y} width={b.w} height={b.h} rx="3" />
+          <text class="dg-label" x={b.x + b.w / 2} y={b.sub ? b.y + b.h / 2 - 8 : b.y + b.h / 2}>{b.label}</text>
+          {b.sub && <text class="dg-sub" x={b.x + b.w / 2} y={b.y + b.h / 2 + 9}>{b.sub}</text>}
+        </>
+      ))
+    }
+
+    <!-- Cliente → Orquestador → Agentes → Gemini -->
+    <path class="dg-line" marker-end="url(#dg-agents-h)" d="M110 154 H154" />
+    <path class="dg-line" marker-end="url(#dg-agents-h)" d="M300 154 H344" />
+    <path class="dg-line" marker-end="url(#dg-agents-h)" d="M544 154 H592" />
+
+    <!-- Redis y MySQL cuelgan del orquestador -->
+    <path class="dg-line" marker-end="url(#dg-agents-h)" d="M229 128 V80" />
+    <path class="dg-line" marker-end="url(#dg-agents-h)" d="M229 180 V228" />
+
+    <!-- El seller-agent le pasa los embeddings al ERP -->
+    <path class="dg-line-accent" marker-end="url(#dg-agents-ha)" d="M446 204 V258 H592" />
+    <text class="dg-note" x="512" y="248">{n.embeddings}</text>
+  </svg>
+</div>

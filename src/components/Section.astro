@@ -1,0 +1,22 @@
+---
+import Row from './Row.astro';
+
+interface Props {
+  title: string;
+  note?: string;
+  id?: string;
+}
+const { title, note, id } = Astro.props;
+---
+
+<section id={id} class="border-t border-rule">
+  <div class="section-pad mx-auto max-w-5xl px-5 py-12 sm:px-8 sm:py-16">
+    <Row>
+      <h2 slot="rail" class="label">{title}</h2>
+      {note && <p class="text-sm text-ink-2">{note}</p>}
+    </Row>
+    <div class="mt-8">
+      <slot />
+    </div>
+  </div>
+</section>

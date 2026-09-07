@@ -1,0 +1,48 @@
+---
+/**
+ * Validación social. Con `testimonials` vacío este componente no emite nada:
+ * es mejor que no haya sección que una sección con una cita inventada.
+ */
+import Section from './Section.astro';
+import Row from './Row.astro';
+import { testimonials } from '../data/testimonials';
+import type { Lang } from '../data/cv';
+import { useTranslations } from '../i18n';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+---
+
+{
+  testimonials.length > 0 && (
+    <Section title={t.testimonials.title} note={t.testimonials.note} id="referencias">
+      {testimonials.map((item) => (
+        <Row as="article" class="border-t border-rule py-8 first:border-t-0 first:pt-0" stickyRail={false}>
+          <figure>
+            <blockquote class="border-l-2 border-accent pl-4 font-display text-xl leading-snug">
+              {item.quote}
+            </blockquote>
+            <figcaption class="mt-4 text-[0.9375rem]">
+              <span class="font-medium">{item.name}</span>
+              <span class="text-ink-2">
+                {' · '}
+                {item.role}, {item.company}
+              </span>
+              {item.source && (
+                <>
+                  {' '}
+                  <a href={item.source} class="link label" rel="noopener">
+                    LinkedIn
+                  </a>
+                </>
+              )}
+            </figcaption>
+          </figure>
+        </Row>
+      ))}
+    </Section>
+  )
+}

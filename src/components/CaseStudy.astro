@@ -1,0 +1,71 @@
+---
+/**
+ * Un caso: Situación → Qué hice → Resultado, con la cifra adelante.
+ * El diagrama va por fuera de la medida de lectura (68ch) y alineado con la
+ * columna de contenido, porque necesita más ancho que un párrafo.
+ */
+import Row from './Row.astro';
+import StackList from './StackList.astro';
+import TechDetails from './TechDetails.astro';
+import { diagrams } from './diagrams/index';
+import type { cases } from '../data/cases';
+import type { Lang } from '../data/cv';
+import { useTranslations } from '../i18n';
+import { inlineCode } from '../i18n/markup';
+
+interface Props {
+  lang: Lang;
+  entry: (typeof cases)[number];
+}
+const { lang, entry } = Astro.props;
+const t = useTranslations(lang);
+const c = t.cases.items[entry.id];
+const Diagram = entry.diagram ? diagrams[entry.diagram] : null;
+---
+
+<article id={`caso-${entry.id}`} class="scroll-mt-20 border-t border-rule py-10 first:border-t-0 first:pt-0 sm:py-12">
+  <Row>
+    <div slot="rail" class="label">
+      <div class="text-accent">{c.tag}</div>
+      <div class="mt-1.5">{entry.company}</div>
+      <div class="mt-0.5">{entry.year}</div>
+    </div>
+
+    <h3 class="font-display text-[1.625rem] leading-snug sm:text-[1.875rem]">{c.title}</h3>
+
+    <!-- La cifra primero: es lo único que se lee si el lector no baja más. -->
+    <p class="mt-5 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+      <span class="figure-num text-[2.5rem] text-accent sm:text-[3rem]">{entry.metric}</span>
+      <span class="max-w-[34ch] text-[0.9375rem] leading-snug text-ink-2">{c.metricLabel}</span>
+    </p>
+
+    <dl class="mt-7 space-y-4 leading-relaxed">
+      <div>
+        <dt class="label">{t.cases.situation}</dt>
+        <dd class="mt-1 text-ink-2" set:html={inlineCode(c.situation)} />
+      </div>
+      <div>
+        <dt class="label">{t.cases.action}</dt>
+        <dd class="mt-1 text-ink-2" set:html={inlineCode(c.action)} />
+      </div>
+      <div>
+        <dt class="label">{t.cases.result}</dt>
+        <dd class="mt-1 border-l-2 border-accent pl-3" set:html={inlineCode(c.result)} />
+      </div>
+    </dl>
+
+    <div class="mt-6">
+      <StackList items={entry.stack} />
+    </div>
+
+    <TechDetails label={t.experience.details} items={c.details} />
+  </Row>
+
+  {
+    Diagram && (
+      <div class="mt-8 lg:ml-[11rem]">
+        <Diagram lang={lang} />
+      </div>
+    )
+  }
+</article>

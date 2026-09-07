@@ -1,0 +1,30 @@
+---
+/**
+ * Las cuatro cifras del encabezado. Son las mismas de la tarjeta OG.
+ * Los valores salen de `proofMetrics`; los rótulos, del diccionario.
+ */
+import { proofMetrics, type Lang } from '../data/cv';
+import { useTranslations } from '../i18n';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<section class="border-y border-rule bg-band" aria-label={t.proof.note}>
+  <div class="mx-auto max-w-5xl px-5 py-8 sm:px-8 sm:py-10">
+    <dl class="grid grid-cols-2 gap-x-6 gap-y-7 sm:grid-cols-4">
+      {
+        proofMetrics.map((metric) => (
+          <div>
+            <dt class="figure-num text-[1.75rem] text-ink sm:text-[2rem]">{metric.value}</dt>
+            <dd class="mt-2 text-[0.8125rem] leading-snug text-ink-2">{t.proof.labels[metric.id]}</dd>
+          </div>
+        ))
+      }
+    </dl>
+    <p class="mt-7 border-t border-rule/70 pt-4 text-[0.8125rem] text-ink-2">{t.proof.note}</p>
+  </div>
+</section>

@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.astro/
+.DS_Store
+npm-debug.log*
+
+# Dossier interno: es la fuente del contenido del sitio, pero incluye las
+# instrucciones de redacción, los huecos que no hay que afirmar y datos
+# personales. No entra al repo. Vive sólo en el disco local.
+perfil-nicolas-raffagnini.md

@@ -1,0 +1,112 @@
+---
+import TopBar from './TopBar.astro';
+import Hero from './Hero.astro';
+import ProofStrip from './ProofStrip.astro';
+import Section from './Section.astro';
+import Row from './Row.astro';
+import StackList from './StackList.astro';
+import CaseStudy from './CaseStudy.astro';
+import Timeline from './Timeline.astro';
+import Testimonials from './Testimonials.astro';
+import CtaRow from './CtaRow.astro';
+import CopyEmail from './CopyEmail.astro';
+import { cases } from '../data/cases';
+import { profile, education, type Lang } from '../data/cv';
+import { useTranslations, cvHref } from '../i18n';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<TopBar lang={lang} page="home" />
+
+<Hero lang={lang} />
+
+<ProofStrip lang={lang} />
+
+<main id="contenido">
+  <!-- Casos ------------------------------------------------------------- -->
+  <Section title={t.cases.title} note={t.cases.note} id="casos">
+    {cases.map((entry) => <CaseStudy lang={lang} entry={entry} />)}
+  </Section>
+
+  <!-- Stack ------------------------------------------------------------- -->
+  <Section title={t.stack.title} note={t.stack.note} id="stack">
+    <Row>
+      <div class="space-y-4">
+        {
+          t.stack.groups.map((group) => (
+            <div class="grid gap-1.5 sm:grid-cols-[8.5rem_minmax(0,1fr)] sm:items-start sm:gap-3">
+              <h3 class="label sm:pt-1.5">{group.label}</h3>
+              <StackList items={group.items} />
+            </div>
+          ))
+        }
+        <div class="border-t border-rule pt-4">
+          <h3 class="label">{t.stack.declaredLabel}</h3>
+          <div class="mt-2">
+            <StackList items={t.stack.declared} muted />
+          </div>
+        </div>
+      </div>
+    </Row>
+  </Section>
+
+  <!-- Experiencia ------------------------------------------------------- -->
+  <Section title={t.experience.title} id="experiencia">
+    <Timeline lang={lang} />
+  </Section>
+
+  <!-- Referencias (sólo si hay datos cargados) -------------------------- -->
+  <Testimonials lang={lang} />
+
+  <!-- Formación --------------------------------------------------------- -->
+  <Section title={t.education.title} id="formacion">
+    {
+      education.map((item) => (
+        <Row class="py-3" stickyRail={false}>
+          <p slot="rail" class="label">
+            {item.period}
+          </p>
+          <p class="font-medium">{t.education.items[item.id]}</p>
+          <p class="text-[0.9375rem] text-ink-2">{item.institution}</p>
+        </Row>
+      ))
+    }
+
+    <Row class="mt-6 border-t border-rule pt-6" stickyRail={false}>
+      <h3 slot="rail" class="label">{t.education.languagesTitle}</h3>
+      <ul class="space-y-1 text-ink-2">
+        {t.education.languages.map((line) => <li>{line}</li>)}
+      </ul>
+    </Row>
+  </Section>
+</main>
+
+<!-- Contacto ------------------------------------------------------------- -->
+<footer id="contacto" class="scroll-mt-20 border-t border-rule">
+  <div class="mx-auto max-w-5xl px-5 py-12 sm:px-8 sm:py-16">
+    <Row>
+      <h2 slot="rail" class="label">{t.contact.title}</h2>
+      <p class="font-display text-2xl leading-snug">{t.contact.lead}</p>
+
+      <CtaRow lang={lang} class="mt-7" />
+
+      <ul class="mt-8 flex flex-col gap-1.5 text-ink-2 sm:flex-row sm:flex-wrap sm:gap-x-6">
+        <li><CopyEmail lang={lang} /></li>
+        <li><a href={profile.phoneHref} class="link">{profile.phone}</a></li>
+        <li><a href={profile.linkedin} class="link" rel="noopener">{profile.linkedinLabel}</a></li>
+      </ul>
+
+      <p class="mt-8">
+        <a href={cvHref(lang)} class="link label" title={t.nav.cvPageTitle}>{t.nav.cvPage}</a>
+      </p>
+
+      <p class="label mt-8">{t.contact.updated}</p>
+      <p class="label mt-1">{t.contact.builtWith}</p>
+    </Row>
+  </div>
+</footer>

@@ -1,0 +1,44 @@
+---
+/**
+ * La fila de llamados a la acción. Se usa dos veces: en el hero y en el
+ * contacto. El primario es escribirme; el resto son salidas secundarias.
+ * En móvil el primario ocupa el ancho completo para que no haya duda de
+ * cuál es la acción principal.
+ */
+import { Mail, MessageCircle, Download, Github } from 'lucide-astro';
+import { profile, pdf, type Lang } from '../data/cv';
+import { useTranslations } from '../i18n';
+
+interface Props {
+  lang: Lang;
+  class?: string;
+}
+const { lang, class: className = '' } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<div class:list={['no-print flex flex-col gap-2.5 sm:flex-row sm:flex-wrap sm:items-center', className]}>
+  <a
+    href={`mailto:${profile.email}`}
+    class="btn btn-primary w-full sm:w-auto"
+    title={t.cta.writeTitle}
+  >
+    <Mail class="h-4 w-4" aria-hidden="true" />
+    {t.cta.write}
+  </a>
+
+  <a href={profile.whatsapp} rel="noopener" class="btn btn-secondary w-full sm:w-auto" title={t.cta.whatsappTitle}>
+    <MessageCircle class="h-4 w-4" aria-hidden="true" />
+    {t.cta.whatsapp}
+  </a>
+
+  <a href={pdf[lang]} download class="btn btn-secondary w-full sm:w-auto" title={t.nav.downloadTitle}>
+    <Download class="h-4 w-4" aria-hidden="true" />
+    {t.cta.cv}
+  </a>
+
+  <a href={profile.github} rel="noopener" class="btn btn-secondary w-full sm:w-auto">
+    <Github class="h-4 w-4" aria-hidden="true" />
+    {t.cta.github}
+  </a>
+</div>

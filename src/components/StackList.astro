@@ -1,0 +1,15 @@
+---
+interface Props {
+  items: string[];
+  muted?: boolean;
+}
+const { items, muted = false } = Astro.props;
+---
+
+<ul class="flex flex-wrap gap-1.5">
+  {
+    items.map((item) => (
+      <li class:list={['chip', muted && 'border-dashed text-ink-2']}>{item}</li>
+    ))
+  }
+</ul>

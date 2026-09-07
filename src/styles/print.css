@@ -1,0 +1,125 @@
+/* Hoja de impresión del CV. La importa sólo src/components/CvPage.astro:
+   el portafolio no la carga porque no se imprime. */
+
+/* ------------------------------------------------------------------ *
+ * Impresión: A4, paleta clara forzada, todo el detalle desplegado,
+ * sin controles y con las URLs visibles.
+ * ------------------------------------------------------------------ */
+@media print {
+  @page {
+    size: A4;
+    margin: 13mm 14mm;
+  }
+
+  :root,
+  .dark {
+    --paper: #ffffff;
+    --surface: #ffffff;
+    --ink: #000000;
+    --ink-2: #3d3d3d;
+    --rule: #b8b8b8;
+    --band: #eeeeee;
+    --accent: #0f5132;
+  }
+
+  body {
+    font-size: 9pt;
+    line-height: 1.36;
+  }
+
+  /* Las viñetas del detalle técnico son la mayor parte del papel: van apretadas. */
+  .details-body > li {
+    margin-top: 3.5pt !important;
+    padding-left: 6pt;
+  }
+
+  ul,
+  ol {
+    margin: 0;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  /* El detalle técnico se imprime completo. Chrome oculta el contenido de un
+     <details> cerrado con content-visibility, así que hay que levantarlo a mano;
+     además, el script de impresión abre los <details> antes de imprimir. */
+  details {
+    display: block !important;
+  }
+  details > summary {
+    display: none !important;
+  }
+  details::details-content {
+    content-visibility: visible !important;
+    display: block !important;
+  }
+  details > :not(summary) {
+    display: block !important;
+    content-visibility: visible !important;
+    height: auto !important;
+  }
+
+  a.link,
+  a.link:hover {
+    background: none;
+    text-decoration: none;
+  }
+
+  /* Los enlaces ya muestran su dirección como texto: no hace falta repetirla. */
+
+  /* En papel no hay rail: el contenido usa todo el ancho útil de la hoja. */
+  .measure {
+    max-width: none;
+  }
+
+  .section-pad {
+    padding-top: 11pt !important;
+    padding-bottom: 11pt !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    max-width: none !important;
+  }
+
+  article {
+    padding-top: 9pt !important;
+    padding-bottom: 9pt !important;
+  }
+
+  .chip {
+    font-size: 7.4pt;
+    padding: 0.5pt 3pt;
+  }
+
+  h1 {
+    font-size: 26pt !important;
+  }
+
+  ol > li > div,
+  footer > div {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    max-width: none !important;
+  }
+
+  .print-block {
+    break-inside: avoid;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  dt,
+  summary {
+    break-after: avoid;
+  }
+
+  p,
+  li {
+    orphans: 2;
+    widows: 2;
+  }
+
+}
